@@ -22,22 +22,33 @@ class _PropertyBoxState extends State<PropertyBox> {
             height: 70,
             width: 325,
             decoration: const BoxDecoration(color: Colors.black38),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: Table(
+              columnWidths: const {
+                0: FlexColumnWidth(3),
+                1: FlexColumnWidth(1)
+              },
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Text(
-                    widget.property,
-                    style: const TextStyle(fontSize: 20, color: Colors.white),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Text(
-                    widget.icon,
-                    style: const TextStyle(fontSize: 30, color: Colors.white),
-                  ),
+                TableRow(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 22),
+                      child: Text(
+                        widget.property,
+                        style:
+                            const TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 15),
+                      child: Text(
+                        widget.icon,
+                        style:
+                            const TextStyle(fontSize: 30, color: Colors.white),
+                      ),
+                    ),
+                  ],
                 )
               ],
             ),
