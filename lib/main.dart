@@ -4,7 +4,7 @@ import 'package:recipe_stash/pages/home_page.dart';
 
 void main() async {
   await Hive.initFlutter();
-  var box = await Hive.openBox("recipeNames");
+  await Hive.openBox("recipeNames");
   runApp(const MyApp());
 }
 

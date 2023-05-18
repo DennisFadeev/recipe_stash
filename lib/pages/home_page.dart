@@ -1,7 +1,10 @@
+import 'dart:ui';
+import 'package:recipe_stash/utils/app_bar_home.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hive/hive.dart';
 import 'package:recipe_stash/utils/recipe_box.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -11,6 +14,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _StatefulHomePageState extends State<HomePage> {
+  final ScrollController _scrollController = ScrollController();
+
   final _names = Hive.box("recipeNames");
   List<dynamic>? currentRecipes;
   void writeData(String newName) {
@@ -93,6 +98,8 @@ class _StatefulHomePageState extends State<HomePage> {
     if (keyword.isEmpty) {
       results = readData();
     } else {
+      _scrollController.animateTo(0.0,
+          duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
       results = readData()
           .where((recipe) =>
               recipe.toString().toLowerCase().contains(keyword.toLowerCase()))
@@ -106,46 +113,15 @@ class _StatefulHomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Container(
-        color: Colors.black,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
-          child: GNav(
-              selectedIndex: 1,
-              activeColor: Colors.white,
-              color: Colors.white,
-              backgroundColor: Colors.black,
-              tabBackgroundColor: const Color.fromARGB(255, 53, 53, 71),
-              gap: 8,
-              tabs: [
-                GButton(
-                  icon: Icons.add,
-                  text: "Hinzufügen",
-                  onPressed: () => _showInputDialog(context),
-                ),
-                GButton(
-                    icon: Icons.search,
-                    text: "Suche nach Rezepten",
-                    onPressed: () {}),
-                GButton(icon: Icons.casino, text: "Zufallsgenerator")
-              ]),
-        ),
-      ),
+      extendBodyBehindAppBar: true,
+      appBar: const MyAppBar(),
       backgroundColor: const Color.fromARGB(255, 41, 37, 37),
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text(
-          "RecipeStash",
-          style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 24, color: Colors.white),
-        ),
-      ),
       body: Column(
         children: <Widget>[
-          const SizedBox(height: 30),
+          SizedBox(height: 150),
           Center(
             child: ClipRRect(
-                borderRadius: BorderRadius.circular(25),
+                borderRadius: BorderRadius.circular(20),
                 child: GestureDetector(
                   child: Container(
                     height: 70,
@@ -169,23 +145,49 @@ class _StatefulHomePageState extends State<HomePage> {
                   ),
                 )),
           ),
-          const SizedBox(
-            height: 20,
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: currentRecipes?.length,
-              itemBuilder: (context, index) {
-                return RecipeBox(
-                    name: currentRecipes![index],
-                    onDelete: () => {
-                          deleteRecipe(currentRecipes![index]),
-                          Navigator.pop(context),
-                        });
-              },
+          ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              width: 500,
+              height: 500,
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                controller: _scrollController,
+                itemCount: currentRecipes?.length,
+                itemBuilder: (context, index) {
+                  return RecipeBox(
+                      name: currentRecipes![index],
+                      onDelete: () => {
+                            deleteRecipe(currentRecipes![index]),
+                            Navigator.pop(context),
+                          });
+                },
+              ),
             ),
-          )
+          ),
         ],
+      ),
+      bottomNavigationBar: Container(
+        color: Colors.black,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
+          child: GNav(
+              selectedIndex: -1,
+              activeColor: Colors.white,
+              color: Colors.white,
+              backgroundColor: Colors.black,
+              tabBackgroundColor: const Color.fromARGB(255, 53, 53, 71),
+              gap: 8,
+              tabs: [
+                GButton(
+                  icon: Icons.add,
+                  text: "Hinzufügen",
+                  onPressed: () => _showInputDialog(context),
+                ),
+                GButton(icon: Icons.casino, text: "Zufallsgenerator")
+              ]),
+        ),
       ),
     );
   }
