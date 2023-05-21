@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:recipe_stash/entities/ingredient.dart';
+
+import '../utils/ingredient_box.dart';
 
 class IngredientsPage extends StatefulWidget {
-  const IngredientsPage({super.key});
+  final String name;
+  final _ingredients = Hive.box("ingredients");
+
+  IngredientsPage({super.key, required this.name});
 
   @override
   State<IngredientsPage> createState() => _IngredientsPageState();
@@ -11,7 +18,24 @@ class _IngredientsPageState extends State<IngredientsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
-    );
+        backgroundColor: const Color.fromARGB(255, 41, 37, 37),
+        body: Center(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(width: 2.0, color: Colors.amber),
+                    color: const Color.fromARGB(255, 41, 37, 37)),
+                height: 450,
+                width: 380,
+                child: ListView.builder(
+                  padding: EdgeInsets.zero,
+                  itemCount: 0,
+                  itemBuilder: (context, index) {
+                    return IngredientBox(ingredient: Ingredient());
+                  },
+                )),
+          ),
+        ));
   }
 }
