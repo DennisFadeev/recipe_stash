@@ -14,7 +14,7 @@ class IngredientBox extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
             color: Colors.white.withOpacity(0.1)),
-        height: 100,
+        height: 80,
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Padding(
@@ -26,7 +26,8 @@ class IngredientBox extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Text("${ingredient?.amount ?? ""} ${ingredient?.unit ?? ""}",
+            child: Text(
+                "${ingredient?.amount ?? ""} ${unitLabels[ingredient?.unit] ?? ""}",
                 style: const TextStyle(fontSize: 18, color: Colors.white)),
           )
         ]),
