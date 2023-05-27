@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:recipe_stash/entities/ingredient.dart';
+import 'package:recipe_stash/utils/ingredient_dialog.dart';
 
 import '../utils/ingredient_box.dart';
 
@@ -58,80 +59,43 @@ class _IngredientsPageState extends State<IngredientsPage> {
                           child: Container(
                             height: 70,
                             color: Colors.black26,
-                            child: Row(
-                              children: [
-                                SizedBox(width: 10),
-                                Container(
-                                    width: 150,
-                                    height: 80,
-                                    child: const Center(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: TextField(
-                                          style: TextStyle(color: Colors.amber),
-                                          decoration: InputDecoration(
-                                            border: InputBorder.none,
-                                            labelStyle:
-                                                TextStyle(color: Colors.white),
-                                            labelText: 'Zutat..',
-                                            enabledBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.blue),
-                                            ),
-                                            focusedBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.green),
-                                            ),
-                                          ),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context)
+                                    .push(IngredientDialog(builder: (context) {
+                                  return IngredientDialogBox();
+                                }));
+                              },
+                              child: Hero(
+                                tag: "Test String",
+                                child: Container(
+                                  width: 200,
+                                  child: Material(
+                                    color: Colors.black54,
+                                    elevation: 2,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(32)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Text(
+                                          "Hinzufügen",
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.amber),
                                         ),
-                                      ),
-                                    )),
-                                Container(
-                                    width: 100,
-                                    height: 80,
-                                    child: const Center(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: TextField(
-                                          style: TextStyle(color: Colors.amber),
-                                          decoration: InputDecoration(
-                                            border: InputBorder.none,
-                                            labelStyle:
-                                                TextStyle(color: Colors.white),
-                                            labelText: 'Menge..',
-                                            enabledBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.blue),
-                                            ),
-                                            focusedBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.green),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    )),
-                                Container(
-                                  width: 60,
-                                  child: DropdownButton<Unit>(
-                                    value: defaultUnit,
-                                    dropdownColor: Colors.black,
-                                    items: units
-                                        .map((item) => DropdownMenuItem<Unit>(
-                                              value: item,
-                                              child: Text(
-                                                unitLabels[item]!,
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.white),
-                                              ),
-                                            ))
-                                        .toList(),
-                                    onChanged: (item) =>
-                                        setState(() => defaultUnit = item!),
+                                        Icon(
+                                          Icons.add_rounded,
+                                          size: 30,
+                                          color: Colors.amber,
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                )
-                              ],
+                                ),
+                              ),
                             ),
                           )),
                     )
