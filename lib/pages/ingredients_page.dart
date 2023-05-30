@@ -15,19 +15,18 @@ class IngredientsPage extends StatefulWidget {
 }
 
 class _IngredientsPageState extends State<IngredientsPage> {
-  final _ingredients = Hive.box("ingredients");
-  final units = [Unit.mg, Unit.g, Unit.kg, Unit.ml, Unit.l, Unit.stk];
-  var defaultUnit = Unit.g;
-  TextEditingController _nameController = new TextEditingController();
-  TextEditingController _amountController = new TextEditingController();
+  var _ingredients = Hive.box("ingredients");
+  late var ingredients;
+
+  @override
+  void initState() {
+    ingredients = _ingredients.get(widget.name);
+    ingredients ??= [];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var ingredient = Ingredient()
-      ..name = "Hühnchen"
-      ..amount = "2"
-      ..unit = Unit.stk;
-
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 41, 37, 37),
         body: Center(
@@ -45,9 +44,9 @@ class _IngredientsPageState extends State<IngredientsPage> {
                       height: 350,
                       child: ListView.builder(
                         padding: EdgeInsets.zero,
-                        itemCount: 10,
+                        itemCount: ingredients.length,
                         itemBuilder: (context, index) {
-                          return IngredientBox(ingredient: ingredient);
+                          return IngredientBox(ingredient: ingredients[index]);
                         },
                       ),
                     ),
@@ -63,12 +62,17 @@ class _IngredientsPageState extends State<IngredientsPage> {
                               onTap: () {
                                 Navigator.of(context)
                                     .push(IngredientDialog(builder: (context) {
-                                  return IngredientDialogBox();
-                                }));
+                                  return IngredientDialogBox(name: widget.name);
+                                })).then((value) => {
+                                          setState(() {
+                                            ingredients =
+                                                _ingredients.get(widget.name);
+                                          })
+                                        });
                               },
                               child: Hero(
                                 tag: "Test String",
-                                child: Container(
+                                child: SizedBox(
                                   width: 200,
                                   child: Material(
                                     color: Colors.black54,
@@ -79,7 +83,7 @@ class _IngredientsPageState extends State<IngredientsPage> {
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
-                                      children: [
+                                      children: const [
                                         Text(
                                           "Hinzufügen",
                                           style: TextStyle(
